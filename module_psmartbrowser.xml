@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_psmartbrowser" default="compile.module.psmartbrowser">
+  <dirname property="module.psmartbrowser.basedir" file="${ant.file.module_psmartbrowser}"/>
+  
+  <property name="module.jdk.home.psmartbrowser" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.psmartbrowser" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.psmartbrowser" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.psmartbrowser" value="-encoding UTF-8 -source 1.8 -target 1.8 ${compiler.args}"/>
+  
+  <property name="psmartbrowser.output.dir" value="${module.psmartbrowser.basedir}/out/production/psmartBrowser"/>
+  <property name="psmartbrowser.testoutput.dir" value="${module.psmartbrowser.basedir}/out/test/psmartBrowser"/>
+  
+  <path id="psmartbrowser.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="psmartbrowser.module.production.classpath">
+    <path refid="${module.jdk.classpath.psmartbrowser}"/>
+  </path>
+  
+  <path id="psmartbrowser.runtime.production.module.classpath">
+    <pathelement location="${psmartbrowser.output.dir}"/>
+  </path>
+  
+  <path id="psmartbrowser.module.classpath">
+    <path refid="${module.jdk.classpath.psmartbrowser}"/>
+    <pathelement location="${psmartbrowser.output.dir}"/>
+  </path>
+  
+  <path id="psmartbrowser.runtime.module.classpath">
+    <pathelement location="${psmartbrowser.testoutput.dir}"/>
+    <pathelement location="${psmartbrowser.output.dir}"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.psmartbrowser">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.psmartbrowser">
+    <patternset refid="excluded.from.module.psmartbrowser"/>
+  </patternset>
+  
+  <path id="psmartbrowser.module.sourcepath">
+    <dirset dir="${module.psmartbrowser.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.psmartbrowser" depends="compile.module.psmartbrowser.production,compile.module.psmartbrowser.tests" description="Compile module psmartBrowser"/>
+  
+  <target name="compile.module.psmartbrowser.production" depends="register.custom.compilers" description="Compile module psmartBrowser; production classes">
+    <mkdir dir="${psmartbrowser.output.dir}"/>
+    <javac2 destdir="${psmartbrowser.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.psmartbrowser}/javac">
+      <compilerarg line="${compiler.args.psmartbrowser}"/>
+      <bootclasspath refid="psmartbrowser.module.bootclasspath"/>
+      <classpath refid="psmartbrowser.module.production.classpath"/>
+      <src refid="psmartbrowser.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.psmartbrowser"/>
+    </javac2>
+    
+    <copy todir="${psmartbrowser.output.dir}">
+      <fileset dir="${module.psmartbrowser.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.psmartbrowser.tests" depends="register.custom.compilers,compile.module.psmartbrowser.production" description="compile module psmartBrowser; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.psmartbrowser" description="cleanup module">
+    <delete dir="${psmartbrowser.output.dir}"/>
+    <delete dir="${psmartbrowser.testoutput.dir}"/>
+  </target>
+</project>
