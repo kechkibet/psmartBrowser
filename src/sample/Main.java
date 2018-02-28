@@ -41,6 +41,7 @@ public class Main extends Application {
             }
         });
         root.getChildren().addAll(webView);
+        //i added this for the test branch...
 
         //Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
         primaryStage.setTitle("P-Smart Browser - Version 0.0.1");
